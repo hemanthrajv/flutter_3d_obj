@@ -1,9 +1,34 @@
 # flutter_3d_obj
 
-A flutter package to render wavefron obj files on canvas.
+A flutter package to render wavefront obj files on a canvas.
+
+## Usage
+
+To use this package, add flutter_3d_obj to your pubspec.yaml file.
+Then import the package to use it.
+
+### Example
+
+The following example basic usage of package.
+
+```
+...
+child: new Object_3D(size:'/size of canvas/',
+                    path:'/path of file/',
+                    asset: true'/set true to load file from assets/'),
+...
+```
+## Built With
+
+* [Flutter](https://flutter.io) - A framework for building crossplatform mobile applications with native look and feel.
+
+
+## Author
+
+**Hemanth Raj** 
+[LinkedIn](https://www.linkedin.com/in/hemanthrajv)
+
 
 ## Getting Started
 
-For help getting started with Flutter, view our online [documentation](http://flutter.io/).
-
-For help on editing package code, view the [documentation](https://flutter.io/developing-packages/).
+For help getting started with Flutter, view online [documentation](http://flutter.io/).
