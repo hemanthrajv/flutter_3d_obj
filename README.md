@@ -7,7 +7,7 @@ A flutter package to render wavefront obj files on a canvas.
 To use this package, add flutter_3d_obj to your pubspec.yaml file.
 Then import the package to use it.
 
-### Example
+### Example Usage
 
 The following example basic usage of package.
 
@@ -20,6 +20,13 @@ child: new Object_3D(size:'/size of canvas/',
 ```
 If SD-card path provided, ensure SD-card permissions are available.
 
+### Example
+```
+* Clone the repo with 'git clone https://github.com/hemanthrajv/flutter_3d_obj.git'
+* cd /path to cloned dir/
+* cd example
+* flutter run
+```
 
 ## Built With
 
