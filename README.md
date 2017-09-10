@@ -21,8 +21,11 @@ child: new Object_3D(size:'/size of canvas/',
 If SD-card path provided, ensure SD-card permissions are available.
 
 ### Example
+
+To run the example.
+
 ```
-* Clone the repo with 'git clone https://github.com/hemanthrajv/flutter_3d_obj.git'
+* git clone https://github.com/hemanthrajv/flutter_3d_obj.git
 * cd /path to cloned dir/
 * cd example
 * flutter run
