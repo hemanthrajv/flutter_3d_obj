@@ -30,7 +30,7 @@ If SD-card path provided, ensure SD-card permissions are available.
 #### Screenshot:
 ![Failed to load Screenshot][logo]
 
-[logo]: https://github.com/hemanthrajv/flutter_3d_obj/screenshot.png
+[logo]: https://github.com/hemanthrajv/flutter_3d_obj/blob/master/screenshot.png
 
 
 ## Built With
