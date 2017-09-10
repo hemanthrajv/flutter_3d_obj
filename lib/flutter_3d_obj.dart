@@ -1,63 +1,32 @@
 library flutter_3d_obj;
 
 import 'dart:io';
-import 'dart:math' as Math;
 import 'dart:ui';
+import 'dart:math' as Math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 import 'package:vector_math/vector_math.dart' show Vector3;
 import 'package:vector_math/vector_math.dart' as V;
 
 class Object_3D extends StatefulWidget {
-  Object_3D(
-      {@required this.size,
-      @required this.path,
-      @required this.asset,
-      this.angleX,
-      this.angleY,
-      this.angleZ,
-      this.zoom = 100.0}) {
-    if (angleX != null || angleY != null || angleZ != null) {
-      useInternal = false;
-    }
-  }
+  Object_3D({this.size, this.path});
 
   Size size;
-  bool asset;
   String path;
-  double zoom;
-  double angleX;
-  double angleY;
-  double angleZ;
-  bool useInternal = true;
 
   @override
-  _Object_3DState createState() =>
-      new _Object_3DState(path, useInternal, asset);
+  _Object_3DState createState() => new _Object_3DState(size, path);
 }
 
 class _Object_3DState extends State<Object_3D> {
-  _Object_3DState(this.path, this.useInternal, bool asset) {
-    if (asset) {
-      rootBundle.loadString(this.path).then((String value) {
-        setState(() {
-          object = value;
-        });
+  _Object_3DState(this.size, this.path) {
+    rootBundle.loadString(this.path).then((String value) {
+      setState(() {
+        object = value;
       });
-    } else {
-      File file = new File(this.path);
-      file.readAsString().then((String value) {
-        setState(() {
-          object = value;
-        });
-      });
-    }
+    });
   }
-
-  bool useInternal;
-  String path;
 
   double angleX = 15.0;
   double angleY = 45.0;
@@ -66,7 +35,8 @@ class _Object_3DState extends State<Object_3D> {
   double _previousX = 0.0;
   double _previousY = 0.0;
 
-  double zoom;
+  Size size;
+  String path;
   String object = "V 1 1 1 1";
 
   File file;
@@ -115,14 +85,8 @@ class _Object_3DState extends State<Object_3D> {
   Widget build(BuildContext context) {
     return new GestureDetector(
       child: new CustomPaint(
-        painter: new _ObjectPainter(
-            widget.size,
-            object,
-            useInternal ? angleX : widget.angleX,
-            useInternal ? angleY : widget.angleY,
-            useInternal ? angleZ : widget.angleZ,
-            widget.zoom),
-        size: widget.size,
+        painter: new _ObjectPainter(size, object, angleX, angleY, angleZ),
+        size: size,
       ),
       onHorizontalDragUpdate: _updateY,
       onVerticalDragUpdate: _updateX,
@@ -131,7 +95,7 @@ class _Object_3DState extends State<Object_3D> {
 }
 
 class _ObjectPainter extends CustomPainter {
-  double _zoomFactor = 100.0;
+  final double _zoomFactor = 100.0;
 
   final double _rotation = 5.0; // in degrees
   double _translation = 0.1 / 100;
@@ -144,7 +108,7 @@ class _ObjectPainter extends CustomPainter {
   double _viewPortX = 0.0, _viewPortY = 0.0;
 
   List<Vector3> vertices;
-  List<dynamic> faces;
+  List faces;
   V.Matrix4 T;
   Vector3 camera;
   Vector3 light;
@@ -157,12 +121,11 @@ class _ObjectPainter extends CustomPainter {
 
   Size size;
 
-  _ObjectPainter(this.size, this.object, this.angleX, this.angleY, this.angleZ,
-      this._zoomFactor) {
+  _ObjectPainter(this.size, this.object, this.angleX, this.angleY, this.angleZ) {
     _translation *= _zoomFactor;
-    camera = new Vector3(0.0, 0.0, 0.0);
-    light = new Vector3(0.0, 0.0, 100.0);
-    color = new Color.fromARGB(255, 255, 255, 255);
+    camera = new Vector3(0.0, 0.0, 1.0);
+    light = new Vector3(0.0, 0.0, 0.0);
+    color = new Color.fromARGB(255, 0, 0, 0);
     _viewPortX = (size.width / 2).toDouble();
     _viewPortY = (size.height / 2).toDouble();
   }
@@ -233,9 +196,9 @@ class _ObjectPainter extends CustomPainter {
     T = new V.Matrix4.translationValues(_viewPortX, _viewPortY, ZERO);
     T.scale(_zoomFactor, -_zoomFactor);
 
-    T.rotateX(_degreeToRadian(angleX != null ? angleX : 0.0));
-    T.rotateY(_degreeToRadian(angleY != null ? angleY : 0.0));
-    T.rotateZ(_degreeToRadian(angleZ != null ? angleZ : 0.0));
+    T.rotateX(_degreeToRadian(angleX));
+    T.rotateY(_degreeToRadian(angleY));
+    T.rotateZ(_degreeToRadian(angleZ));
 
     return T.transform3(vertex);
   }
@@ -260,13 +223,14 @@ class _ObjectPainter extends CustomPainter {
       koef = 0.0;
     }
 
-    Color newColor = new Color.fromARGB(255, 0, 0, 0);
+    Color newColor = new Color.fromARGB(100, 0, 0, 0);
 
     Path path = new Path();
 
     newColor = newColor.withRed((color.red.toDouble() * koef).round());
     newColor = newColor.withGreen((color.green.toDouble() * koef).round());
     newColor = newColor.withBlue((color.blue.toDouble() * koef).round());
+
     paint.color = newColor;
     paint.style = PaintingStyle.fill;
 
@@ -296,10 +260,6 @@ class _ObjectPainter extends CustomPainter {
 
       path.lineTo(secondVertexX, secondVertexY);
     }
-    var z = 0.0;
-    face.forEach((int x) {
-      z += verticesToDraw[x - 1].z;
-    });
 
     path.close();
     list.add(path);
@@ -309,8 +269,6 @@ class _ObjectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    debugPrint("Repaint:");
-
     Map parsedFile = _parseObjString(object);
     vertices = parsedFile["vertices"];
     faces = parsedFile["faces"];
@@ -324,35 +282,14 @@ class _ObjectPainter extends CustomPainter {
       verticesToDraw[i] = _calcDefaultVertex(verticesToDraw[i]);
     }
 
-    final List avgOfZ = <Map>[];
-    for (int i = 0; i < faces.length; i++) {
-      List face = faces[i];
-      double z = 0.0;
-      face.forEach((int x) {
-        z += verticesToDraw[x - 1].z;
-      });
-      Map data = <String, dynamic>{
-        "index": i,
-        "z": z,
-      };
-      avgOfZ.add(data);
-    }
-    avgOfZ.sort((Map a, Map b) => a['z'].compareTo(b['z']));
-
-    for (int i = 0; i < faces.length; i++) {
-      List face = faces[avgOfZ[i]["index"]];
+    faces.forEach((List face) {
       if (_shouldDrawFace(face) || true) {
         final List<dynamic> faceProp = _drawFace(verticesToDraw, face);
         canvas.drawPath(faceProp[0], faceProp[1]);
       }
-    }
+    });
   }
 
   @override
-  bool shouldRepaint(_ObjectPainter old) =>
-      old.object != object ||
-      old.angleX != angleX ||
-      old.angleY != angleY ||
-      old.angleZ != angleZ ||
-      old._zoomFactor != _zoomFactor;
+  bool shouldRepaint(_ObjectPainter old) => old.object != object|| old.angleX != angleX || old.angleY != angleY || old.angleZ != angleZ;
 }

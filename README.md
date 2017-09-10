@@ -18,6 +18,9 @@ child: new Object_3D(size:'/size of canvas/',
                     asset: true'/set true to load file from assets/'),
 ...
 ```
+If SD-card path provided, ensure SD-card permissions are available.
+
+
 ## Built With
 
 * [Flutter](https://flutter.io) - A framework for building crossplatform mobile applications with native look and feel.
