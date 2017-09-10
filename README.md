@@ -27,6 +27,11 @@ If SD-card path provided, ensure SD-card permissions are available.
 * cd example
 * flutter run
 ```
+#### Screenshot:
+![Failed to load Screenshot][logo]
+
+[logo]: https://github.com/hemanthrajv/flutter_3d_obj/screenshot.png
+
 
 ## Built With
 
@@ -35,7 +40,7 @@ If SD-card path provided, ensure SD-card permissions are available.
 
 ## Author
 
-**Hemanth Raj** 
+**Hemanth Raj**
 [LinkedIn](https://www.linkedin.com/in/hemanthrajv)
 
 
