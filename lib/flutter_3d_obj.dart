@@ -308,7 +308,6 @@ class _ObjectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    debugPrint("Repaint:");
 
     Map parsedFile = _parseObjString(object);
     vertices = parsedFile["vertices"];
