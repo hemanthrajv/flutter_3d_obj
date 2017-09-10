@@ -13,12 +13,12 @@ import 'package:vector_math/vector_math.dart' as V;
 class Object_3D extends StatefulWidget {
   Object_3D(
       {@required this.size,
-        @required this.path,
-        @required this.asset,
-        this.angleX,
-        this.angleY,
-        this.angleZ,
-        this.zoom = 100.0}) {
+      @required this.path,
+      @required this.asset,
+      this.angleX,
+      this.angleY,
+      this.angleZ,
+      this.zoom = 100.0}) {
     if (angleX != null || angleY != null || angleZ != null) {
       useInternal = false;
     }
@@ -34,18 +34,19 @@ class Object_3D extends StatefulWidget {
   bool useInternal = true;
 
   @override
-  _Object_3DState createState() => new _Object_3DState(path, useInternal, asset);
+  _Object_3DState createState() =>
+      new _Object_3DState(path, useInternal, asset);
 }
 
 class _Object_3DState extends State<Object_3D> {
   _Object_3DState(this.path, this.useInternal, bool asset) {
-    if(asset){
+    if (asset) {
       rootBundle.loadString(this.path).then((String value) {
         setState(() {
           object = value;
         });
       });
-    }else{
+    } else {
       File file = new File(this.path);
       file.readAsString().then((String value) {
         setState(() {
@@ -350,8 +351,8 @@ class _ObjectPainter extends CustomPainter {
   @override
   bool shouldRepaint(_ObjectPainter old) =>
       old.object != object ||
-          old.angleX != angleX ||
-          old.angleY != angleY ||
-          old.angleZ != angleZ ||
-          old._zoomFactor != _zoomFactor;
+      old.angleX != angleX ||
+      old.angleY != angleY ||
+      old.angleZ != angleZ ||
+      old._zoomFactor != _zoomFactor;
 }
