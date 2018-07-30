@@ -166,7 +166,7 @@ class _ObjectPainter extends CustomPainter {
     _viewPortY = (size.height / 2).toDouble();
   }
 
-  Map<String, List<List<int>>> _parseObjString(String objString) {
+  Map _parseObjString(String objString) {
     List vertices = <Vector3>[];
     List faces = <List<int>>[];
     List<int> face = [];
@@ -175,9 +175,10 @@ class _ObjectPainter extends CustomPainter {
 
     Vector3 vertex;
 
-    lines.forEach((String line) {
-      line = line.replaceAll(new RegExp(r"\s+$"), "");
-      List<String> chars = line.split(" ");
+    lines.forEach((dynamic line) {
+      String lline = line;
+      lline = lline.replaceAll(new RegExp(r"\s+$"), "");
+      List<String> chars = lline.split(" ");
 
       // vertex
       if (chars[0] == "v") {
@@ -296,8 +297,9 @@ class _ObjectPainter extends CustomPainter {
       path.lineTo(secondVertexX, secondVertexY);
     }
     var z = 0.0;
-    face.forEach((int x) {
-      z += verticesToDraw[x - 1].z;
+    face.forEach((dynamic x) {
+      int xx = x;
+      z += verticesToDraw[xx - 1].z;
     });
 
     path.close();
@@ -322,12 +324,13 @@ class _ObjectPainter extends CustomPainter {
       verticesToDraw[i] = _calcDefaultVertex(verticesToDraw[i]);
     }
 
-    final List avgOfZ = <Map>[];
+    final List<Map> avgOfZ = List();
     for (int i = 0; i < faces.length; i++) {
       List face = faces[i];
       double z = 0.0;
-      face.forEach((int x) {
-        z += verticesToDraw[x - 1].z;
+      face.forEach((dynamic x) {
+        int xx = x;
+        z += verticesToDraw[xx - 1].z;
       });
       Map data = <String, dynamic>{
         "index": i,
