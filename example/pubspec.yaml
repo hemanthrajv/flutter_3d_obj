@@ -2,9 +2,10 @@ name: example
 description: A new Flutter project.
 
 dependencies:
-  flutter_3d_obj: "^0.0.1"
   flutter:
     sdk: flutter
+  flutter_3d_obj:
+    path: ../
 
 dev_dependencies:
   flutter_test:

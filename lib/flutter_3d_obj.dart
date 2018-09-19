@@ -3,6 +3,7 @@ library flutter_3d_obj;
 import 'dart:io';
 import 'dart:math' as Math;
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
@@ -10,53 +11,50 @@ import 'package:meta/meta.dart';
 import 'package:vector_math/vector_math.dart' show Vector3;
 import 'package:vector_math/vector_math.dart' as V;
 
-class Object_3D extends StatefulWidget {
-  Object_3D(
-      {@required this.size,
-        @required this.path,
-        @required this.asset,
-        this.angleX,
-        this.angleY,
-        this.angleZ,
-        this.zoom = 100.0}) {
-    if (angleX != null || angleY != null || angleZ != null) {
-      useInternal = false;
-    }
-  }
+class Object3D extends StatefulWidget {
+  Object3D({
+    @required this.size,
+    @required this.path,
+    @required this.asset,
+    this.angleX,
+    this.angleY,
+    this.angleZ,
+    this.zoom = 100.0,
+  });
 
-  Size size;
-  bool asset;
-  String path;
-  double zoom;
-  double angleX;
-  double angleY;
-  double angleZ;
-  bool useInternal = true;
+  final Size size;
+  final bool asset;
+  final String path;
+  final double zoom;
+  final double angleX;
+  final double angleY;
+  final double angleZ;
 
   @override
-  _Object_3DState createState() => new _Object_3DState(path, useInternal, asset);
+  _Object3DState createState() => new _Object3DState();
 }
 
-class _Object_3DState extends State<Object_3D> {
-  _Object_3DState(this.path, this.useInternal, bool asset) {
-    if(asset){
-      rootBundle.loadString(this.path).then((String value) {
+class _Object3DState extends State<Object3D> {
+  _Object3DState() {
+    if (widget.asset == true) {
+      rootBundle.loadString(widget.path).then((String value) {
         setState(() {
           object = value;
         });
       });
-    }else{
-      File file = new File(this.path);
+    } else {
+      File file = new File(widget.path);
       file.readAsString().then((String value) {
         setState(() {
           object = value;
         });
       });
     }
+
+    useInternal = !(widget.angleX != null || widget.angleY != null || widget.angleZ != null);
   }
 
   bool useInternal;
-  String path;
 
   double angleX = 15.0;
   double angleY = 45.0;
@@ -114,13 +112,8 @@ class _Object_3DState extends State<Object_3D> {
   Widget build(BuildContext context) {
     return new GestureDetector(
       child: new CustomPaint(
-        painter: new _ObjectPainter(
-            widget.size,
-            object,
-            useInternal ? angleX : widget.angleX,
-            useInternal ? angleY : widget.angleY,
-            useInternal ? angleZ : widget.angleZ,
-            widget.zoom),
+        painter: new _ObjectPainter(widget.size, object, useInternal ? angleX : widget.angleX,
+            useInternal ? angleY : widget.angleY, useInternal ? angleZ : widget.angleZ, widget.zoom),
         size: widget.size,
       ),
       onHorizontalDragUpdate: _updateY,
@@ -132,11 +125,11 @@ class _Object_3DState extends State<Object_3D> {
 class _ObjectPainter extends CustomPainter {
   double _zoomFactor = 100.0;
 
-  final double _rotation = 5.0; // in degrees
+//  final double _rotation = 5.0; // in degrees
   double _translation = 0.1 / 100;
-  final double _scalingFactor = 10.0 / 100.0; // in percent
+//  final double _scalingFactor = 10.0 / 100.0; // in percent
 
-  final double ZERO = 0.0;
+  final double zero = 0.0;
 
   final String object;
 
@@ -156,8 +149,7 @@ class _ObjectPainter extends CustomPainter {
 
   Size size;
 
-  _ObjectPainter(this.size, this.object, this.angleX, this.angleY, this.angleZ,
-      this._zoomFactor) {
+  _ObjectPainter(this.size, this.object, this.angleX, this.angleY, this.angleZ, this._zoomFactor) {
     _translation *= _zoomFactor;
     camera = new Vector3(0.0, 0.0, 0.0);
     light = new Vector3(0.0, 0.0, 100.0);
@@ -182,8 +174,7 @@ class _ObjectPainter extends CustomPainter {
 
       // vertex
       if (chars[0] == "v") {
-        vertex = new Vector3(double.parse(chars[1]), double.parse(chars[2]),
-            double.parse(chars[3]));
+        vertex = new Vector3(double.parse(chars[1]), double.parse(chars[2]), double.parse(chars[3]));
 
         vertices.add(vertex);
 
@@ -202,8 +193,7 @@ class _ObjectPainter extends CustomPainter {
   }
 
   bool _shouldDrawFace(List face) {
-    var normalVector = _normalVector3(
-        vertices[face[0] - 1], vertices[face[1] - 1], vertices[face[2] - 1]);
+    var normalVector = _normalVector3(vertices[face[0] - 1], vertices[face[1] - 1], vertices[face[2] - 1]);
 
     var dotProduct = normalVector.dot(camera);
     double vectorLengths = normalVector.length * camera.length;
@@ -230,7 +220,7 @@ class _ObjectPainter extends CustomPainter {
   }
 
   Vector3 _calcDefaultVertex(Vector3 vertex) {
-    T = new V.Matrix4.translationValues(_viewPortX, _viewPortY, ZERO);
+    T = new V.Matrix4.translationValues(_viewPortX, _viewPortY, zero);
     T.scale(_zoomFactor, -_zoomFactor);
 
     T.rotateX(_degreeToRadian(angleX != null ? angleX : 0.0));
@@ -241,7 +231,7 @@ class _ObjectPainter extends CustomPainter {
   }
 
   double _degreeToRadian(double degree) {
-    return degree * (Math.PI / 180.0);
+    return degree * (Math.pi / 180.0);
   }
 
   List<dynamic> _drawFace(List<Vector3> verticesToDraw, List face) {
@@ -249,8 +239,8 @@ class _ObjectPainter extends CustomPainter {
     Paint paint = new Paint();
     Vector3 normalizedLight = new Vector3.copy(light).normalized();
 
-    var normalVector = _normalVector3(verticesToDraw[face[0] - 1],
-        verticesToDraw[face[1] - 1], verticesToDraw[face[2] - 1]);
+    var normalVector =
+        _normalVector3(verticesToDraw[face[0] - 1], verticesToDraw[face[1] - 1], verticesToDraw[face[2] - 1]);
 
     Vector3 jnv = new Vector3.copy(normalVector).normalized();
 
@@ -310,7 +300,6 @@ class _ObjectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-
     Map parsedFile = _parseObjString(object);
     vertices = parsedFile["vertices"];
     faces = parsedFile["faces"];
@@ -352,8 +341,8 @@ class _ObjectPainter extends CustomPainter {
   @override
   bool shouldRepaint(_ObjectPainter old) =>
       old.object != object ||
-          old.angleX != angleX ||
-          old.angleY != angleY ||
-          old.angleZ != angleZ ||
-          old._zoomFactor != _zoomFactor;
+      old.angleX != angleX ||
+      old.angleY != angleY ||
+      old.angleZ != angleZ ||
+      old._zoomFactor != _zoomFactor;
 }

@@ -7,3 +7,7 @@
 ## [0.0.3] - Added Example
 
 ## [0.0.4] - Dart 2 support
+
+## [0.0.5] - Breaking Change
+
+* changed the class name from `Object_3D` to `Object3D`

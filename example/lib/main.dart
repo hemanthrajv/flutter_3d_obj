@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
           title: const Text("Flutter 3D"),
         ),
         body:new Center(
-              child: new Object_3D(size: const Size(400.0, 400.0),path: "assets/file.obj",asset:true),
+              child: new Object3D(size: const Size(400.0, 400.0),path: "assets/file.obj",asset:true),
             ),
       ),
     );
