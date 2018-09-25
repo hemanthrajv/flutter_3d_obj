@@ -13,7 +13,7 @@ The following example basic usage of package.
 
 ```
 ...
-child: new Object_3D(size:'/size of canvas/',
+child: new Object3D(size:'/size of canvas/',
                     path:'/path of file/',
                     asset: true'/set true to load file from assets/'),
 ...
