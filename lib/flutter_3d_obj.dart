@@ -35,7 +35,9 @@ class Object3D extends StatefulWidget {
 }
 
 class _Object3DState extends State<Object3D> {
-  _Object3DState() {
+  _Object3DState();
+
+  void initState() {
     if (widget.asset == true) {
       rootBundle.loadString(widget.path).then((String value) {
         setState(() {
@@ -52,7 +54,9 @@ class _Object3DState extends State<Object3D> {
     }
 
     useInternal = !(widget.angleX != null || widget.angleY != null || widget.angleZ != null);
+    super.initState();
   }
+
 
   bool useInternal;
 

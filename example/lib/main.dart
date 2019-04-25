@@ -6,7 +6,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -15,11 +14,14 @@ class MyApp extends StatelessWidget {
         appBar: new AppBar(
           title: const Text("Flutter 3D"),
         ),
-        body:new Center(
-              child: new Object3D(size: const Size(400.0, 400.0),path: "assets/file.obj",asset:true),
-            ),
+        body: new Center(
+          child: new Object3D(
+            size: const Size(400.0, 400.0),
+            path: "assets/file.obj",
+            asset: true,
+          ),
+        ),
       ),
     );
   }
 }
-
