@@ -2,40 +2,38 @@ library flutter_3d_obj;
 
 import 'dart:io';
 import 'dart:math' as Math;
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 import 'package:vector_math/vector_math.dart' show Vector3;
 import 'package:vector_math/vector_math.dart' as V;
 
 class Object3D extends StatefulWidget {
   Object3D({
-    @required this.size,
-    @required this.path,
-    @required this.asset,
+    required this.size,
+    required this.path,
+    required this.asset,
     this.angleX,
     this.angleY,
     this.angleZ,
     this.zoom = 100.0,
-  });
+    Key? key,
+  }): super(key: key);
 
   final Size size;
   final bool asset;
   final String path;
   final double zoom;
-  final double angleX;
-  final double angleY;
-  final double angleZ;
+  final double? angleX;
+  final double? angleY;
+  final double? angleZ;
 
   @override
-  _Object3DState createState() => new _Object3DState();
+  State<Object3D> createState() => _Object3DState();
 }
 
 class _Object3DState extends State<Object3D> {
-  _Object3DState();
 
   void initState() {
     if (widget.asset == true) {
@@ -58,7 +56,7 @@ class _Object3DState extends State<Object3D> {
   }
 
 
-  bool useInternal;
+  late bool useInternal;
 
   double angleX = 15.0;
   double angleY = 45.0;
@@ -67,10 +65,10 @@ class _Object3DState extends State<Object3D> {
   double _previousX = 0.0;
   double _previousY = 0.0;
 
-  double zoom;
+  late double zoom;
   String object = "V 1 1 1 1";
 
-  File file;
+  late File file;
 
   void _updateCube(DragUpdateDetails data) {
     if (angleY > 360.0) {
@@ -116,8 +114,8 @@ class _Object3DState extends State<Object3D> {
   Widget build(BuildContext context) {
     return new GestureDetector(
       child: new CustomPaint(
-        painter: new _ObjectPainter(widget.size, object, useInternal ? angleX : widget.angleX,
-            useInternal ? angleY : widget.angleY, useInternal ? angleZ : widget.angleZ, widget.zoom),
+        painter: new _ObjectPainter(widget.size, object, useInternal ? angleX : widget.angleX!,
+            useInternal ? angleY : widget.angleY!, useInternal ? angleZ : widget.angleZ!, widget.zoom),
         size: widget.size,
       ),
       onHorizontalDragUpdate: _updateY,
@@ -135,29 +133,31 @@ class _ObjectPainter extends CustomPainter {
 
   final double zero = 0.0;
 
-  final String object;
+  late final String object;
 
   double _viewPortX = 0.0, _viewPortY = 0.0;
 
-  List<Vector3> vertices;
-  List<dynamic> faces;
-  V.Matrix4 T;
-  Vector3 camera;
-  Vector3 light;
+  late List<Vector3> vertices;
+  late List<dynamic> faces;
+  late V.Matrix4 T;
+  late Vector3 camera;
+  late Vector3 light;
 
-  double angleX;
-  double angleY;
-  double angleZ;
+  late double angleX;
+  late double angleY;
+  late double angleZ;
 
-  Color color;
+  late Color color;
 
-  Size size;
+  late Size size;
+  
+  // _ObjectPainter(Size size, String object, double d, double e, double f, double zoom);
 
-  _ObjectPainter(this.size, this.object, this.angleX, this.angleY, this.angleZ, this._zoomFactor) {
+  _ObjectPainter(Size size,String object, double angleX,double angleY,double angleZ, _zoomFactor) {
     _translation *= _zoomFactor;
-    camera = new Vector3(0.0, 0.0, 0.0);
-    light = new Vector3(0.0, 0.0, 100.0);
-    color = new Color.fromARGB(255, 255, 255, 255);
+    camera =  Vector3(0.0, 0.0, 0.0);
+    light =  Vector3(0.0, 0.0, 100.0);
+    color =  Color.fromARGB(255, 255, 255, 255);
     _viewPortX = (size.width / 2).toDouble();
     _viewPortY = (size.height / 2).toDouble();
   }
@@ -317,7 +317,7 @@ class _ObjectPainter extends CustomPainter {
       verticesToDraw[i] = _calcDefaultVertex(verticesToDraw[i]);
     }
 
-    final List<Map> avgOfZ = List();
+    final List<Map> avgOfZ = [];
     for (int i = 0; i < faces.length; i++) {
       List face = faces[i];
       double z = 0.0;
