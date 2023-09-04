@@ -1,19 +1,20 @@
 name: flutter_3d_obj
 description: A new flutter package to render wavefront obj files into a canvas.
-version: 0.0.6
-author: Hemanth Raj <raj84325@gmail.com>
+version: 0.0.7
 homepage: https://github.com/hemanthrajv/flutter_3d_obj
 
 flutter:
 
 environment:
-   sdk: ">=2.0.0-dev.28.0 <3.0.0"
-   flutter: ">=0.2.4 <2.0.0"
+  sdk: '>=2.14.0 <4.0.0'
 
 
 dependencies:
-  meta: "^1.1.1"
-  vector_math: "^2.0.5"
+  vector_math: "^2.1.4"
   flutter:
     sdk: flutter
 
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
